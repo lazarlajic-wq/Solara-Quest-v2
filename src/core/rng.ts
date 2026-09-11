@@ -17,7 +17,7 @@ export class Rng {
   float(min: number, max: number): number {
     return this.next() * (max - min) + min;
   }
-  pick<T>(arr: T[]): T {
+  pick<T>(arr: readonly T[]): T {
     return arr[this.int(0, arr.length - 1)];
   }
   chance(p: number): boolean {
