@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "region": "solara_coast",
+  "directionOrder": ["n", "w", "s", "e"],
+  "frameSize": [64, 64],
+  "pivot": "bottom-center",
+  "designMasters": {
+    "equipment": "../design/region_01/equipment_direction_master_v2.png",
+    "assassinMotion": "../design/region_01/assassin_motion_master_v1.png",
+    "tankMotion": "../design/region_01/tank_motion_master_v1.png",
+    "mageMotion": "../design/region_01/mage_motion_master_v1.png",
+    "archerMotion": "../design/region_01/archer_motion_master_v1.png",
+    "swordsmanMotion": "../design/region_01/swordsman_motion_master_v1.png"
+  },
+  "designMastersRuntimeReady": false,
+  "classes": {
+    "assassin": {
+      "armour": "teal_hood_light_leather",
+      "weapon": "paired_daggers",
+      "fx": ["violet", "shadow"]
+    },
+    "tank": {
+      "armour": "coastal_full_plate_blue_tabard",
+      "weapon": "mace_and_heater_shield",
+      "fx": ["ocean_blue", "gold"]
+    },
+    "mage": {
+      "armour": "royal_blue_robe_pointed_hat",
+      "weapon": "cyan_crystal_staff",
+      "fx": ["cyan", "elemental"]
+    },
+    "archer": {
+      "armour": "moss_hood_leather_quiver",
+      "weapon": "recurve_bow",
+      "fx": ["green", "wind"]
+    },
+    "swordsman": {
+      "armour": "coastal_light_plate_teal_scarf",
+      "weapon": "longsword",
+      "fx": ["pale_teal", "solar_gold"]
+    }
+  },
+  "requiredActions": [
+    "idle", "walk", "run", "dash",
+    "attack_1", "attack_2", "attack_3",
+    "skill_1", "skill_2", "skill_3",
+    "block", "hit", "death", "revive"
+  ],
+  "qa": {
+    "directionMaster": {
+      "status": "approved_concept_only",
+      "checks": {
+        "fiveClassRows": true,
+        "fourDirections": true,
+        "directionOrder": true,
+        "equipmentContinuity": true,
+        "paletteContinuity": true,
+        "transparentBackground": true,
+        "darkBackgroundInspection": true,
+        "lightBackgroundInspection": true,
+        "runtimeGrid": false
+      }
+    },
+    "assassinMotionMaster": {
+      "status": "approved_concept_only",
+      "checks": {
+        "fourDirectionRows": true,
+        "sevenActionColumns": true,
+        "directionOrder": true,
+        "equipmentContinuity": true,
+        "paletteContinuity": true,
+        "dashAfterimagesPresent": true,
+        "skillArcPresent": true,
+        "transparentBackground": true,
+        "darkBackgroundInspection": true,
+        "lightBackgroundInspection": true,
+        "runtimeGrid": false
+      }
+    },
+    "remainingMotionMasters": {
+      "status": "approved_concept_only",
+      "classes": ["tank", "mage", "archer", "swordsman"],
+      "checks": {
+        "fourDirectionRows": true,
+        "sevenActionColumns": true,
+        "directionOrder": true,
+        "equipmentContinuity": true,
+        "paletteContinuity": true,
+        "classDashLanguage": true,
+        "classSkillLanguage": true,
+        "transparentBackground": true,
+        "darkBackgroundInspection": true,
+        "runtimeGrid": false
+      },
+      "corrections": {
+        "mage": "Staff restored in all four dash-travel cells before approval.",
+        "archer": "Bow and quiver restored in all four roll-dash cells before approval."
+      }
+    },
+    "runtimeSheets": {
+      "status": "pending"
+    }
+  }
+}

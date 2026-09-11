@@ -12,13 +12,9 @@
     ],
     "directions": [
       "n",
-      "ne",
-      "e",
-      "se",
-      "s",
-      "sw",
       "w",
-      "nw"
+      "s",
+      "e"
     ],
     "pivot": "bottom-center"
   },
@@ -49,11 +45,31 @@
       "attack_1",
       "attack_2",
       "attack_3",
-      "skill",
+      "skill_1",
+      "skill_2",
+      "skill_3",
+      "block",
       "hit",
-      "death"
+      "death",
+      "revive"
     ],
-    "equipmentRule": "one visible armour and weapon set per class per region"
+    "equipmentRule": "one visible armour and weapon set per class per region",
+    "animationContract": {
+      "directionOrder": [
+        "n",
+        "w",
+        "s",
+        "e"
+      ],
+      "frameSize": [
+        64,
+        64
+      ],
+      "pivot": "bottom-center",
+      "pixelFilter": "nearest",
+      "runtimeBackground": "transparent",
+      "conceptMastersAreRuntimeReady": false
+    }
   },
   "regions": [
     {
