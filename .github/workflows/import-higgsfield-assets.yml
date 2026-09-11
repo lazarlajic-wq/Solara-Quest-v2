@@ -1,0 +1,46 @@
+name: Import final Higgsfield source assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/import-higgsfield-assets.yml"
+      - "scripts/download_final_higgsfield_assets.sh"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-higgsfield-assets
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download final production batch
+        run: bash scripts/download_final_higgsfield_assets.sh
+      - name: Verify source assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          count="$(find assets/source/higgsfield -type f -name '*.png' | wc -l)"
+          test "$count" -eq 36
+          while IFS= read -r -d '' image; do
+            file "$image" | grep -q "PNG image data"
+          done < <(find assets/source/higgsfield -type f -name '*.png' -print0)
+          find assets/source/higgsfield -type f -name '*.png' -print0 |
+            sort -z |
+            xargs -0 sha256sum > assets/source/higgsfield/SHA256SUMS.txt
+      - name: Commit imported source assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/source/higgsfield
+          git diff --cached --quiet && exit 0
+          git commit -m "Import 36 final Higgsfield source atlases"
+          git push
