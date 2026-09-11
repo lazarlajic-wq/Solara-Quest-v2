@@ -1,0 +1,10 @@
+{
+  "_comment": "Copy real PNGs into public/assets/ and list them here to override the procedural placeholders. Keys must match the engine texture keys (see src/art/sprites.ts and src/art/registry.ts). Rename this file to manifest.json to activate.",
+  "images": [
+    { "key": "tile_0", "path": "assets/grass.png" },
+    { "key": "obj_building", "path": "assets/blacksmith.png" }
+  ],
+  "spritesheets": [
+    { "key": "char_swordsman", "path": "assets/hero_8dir.png", "frameWidth": 48, "frameHeight": 48 }
+  ]
+}

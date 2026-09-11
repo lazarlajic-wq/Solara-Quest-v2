@@ -77,10 +77,14 @@ function drawCharacter(
   const legSwing = anim === 'walk' ? Math.sin(phase * Math.PI * 2) * 3 : 0;
   const bodyY = feetY - 20 * s + bob;
 
-  // legs
+  // legs (with outline)
+  ctx.strokeStyle = COLORS.outline;
+  ctx.lineWidth = 1;
   ctx.fillStyle = COLORS.leather;
   ctx.fillRect(cx - 5 * s + legSwing, feetY - 8, 4 * s, 8 * s);
+  ctx.strokeRect(cx - 5 * s + legSwing, feetY - 8, 4 * s, 8 * s);
   ctx.fillRect(cx + 1 * s - legSwing, feetY - 8, 4 * s, 8 * s);
+  ctx.strokeRect(cx + 1 * s - legSwing, feetY - 8, 4 * s, 8 * s);
 
   // cloak behind (accent) — bigger when facing away
   ctx.fillStyle = opts.accent;
@@ -104,6 +108,15 @@ function drawCharacter(
   ctx.beginPath();
   ctx.arc(headX, headY, 7 * s, 0, Math.PI * 2);
   ctx.fill();
+  ctx.strokeStyle = COLORS.outline;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  // hood/cloak collar (accent) framing the head — the teal-hero silhouette
+  ctx.strokeStyle = opts.accent;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(headX, headY + 2 * s, 8 * s, Math.PI * 0.15, Math.PI * 0.85);
+  ctx.stroke();
   if (!facingAway) {
     // face
     ctx.fillStyle = opts.skin;
