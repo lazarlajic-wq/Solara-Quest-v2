@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/liberatedpixelcup/Universal-LPC-Spritesheet-Character-Generator.git",
+    "commit": "675e21e04aaff8486a3a24e09573b3d5af9d28b9"
+  },
+  "uploadedArchive": {
+    "filename": "Universal-LPC-Spritesheet-Character-Generator-master(1).zip",
+    "bytes": 144434985,
+    "sha256": "5bdfcda856d570887079b1a602d534b1152788655c3a394d42a56cde95cfaa09"
+  },
+  "installPath": "vendor/universal-lpc",
+  "uploadedArchiveInventory": {
+    "spritePngFiles": 88114,
+    "sheetDefinitionJsonFiles": 768
+  },
+  "runtimeDirectionOrder": ["up", "left", "down", "right"],
+  "solaraDirectionOrder": ["n", "w", "s", "e"],
+  "frameSize": [64, 64]
+}

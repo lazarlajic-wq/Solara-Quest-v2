@@ -1,0 +1,3 @@
+# The LPC generator contains tens of thousands of source PNGs. Install it with
+# scripts/setup_lpc_source.sh instead of committing a 100+ MB archive.
+/vendor/universal-lpc/

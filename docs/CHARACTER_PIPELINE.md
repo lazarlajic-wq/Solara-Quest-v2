@@ -57,4 +57,8 @@
 6. Inspect each sheet on dark, light and checker backgrounds at 1x and nearest-neighbour 4x.
 7. Reject any sheet with gear swaps, mirrored weapon mistakes, stray pixels, clipped weapons, inconsistent pivots or unexplained colours.
 
+## LPC dependency
+
+Install the pinned generator with `scripts/setup_lpc_source.sh`. The full source is kept at the ignored path `vendor/universal-lpc/`; its immutable source commit and the checksum of the supplied 144 MB archive are recorded in `assets/source/lpc/lpc.lock.json`. This avoids GitHub's normal single-file limit without losing reproducibility. Every exported equipment layer must carry the corresponding upstream credit entry.
+
 The Region 1 equipment master and all five class motion masters under `assets/design/region_01/` passed the class, palette, direction and transparent-background review. The Mage master was corrected because its first blink draft lost the staff; the Archer master was corrected because its first roll draft lost the bow/quiver silhouette. These files are still high-resolution concept masters and intentionally fail the 64 x 64 runtime-grid requirement.
