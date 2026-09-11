@@ -1,0 +1,341 @@
+{
+  "version": "1.0.0",
+  "grid": {
+    "tile": 32,
+    "characterFrame": [
+      64,
+      64
+    ],
+    "bossFrame": [
+      128,
+      128
+    ],
+    "directions": [
+      "n",
+      "ne",
+      "e",
+      "se",
+      "s",
+      "sw",
+      "w",
+      "nw"
+    ],
+    "pivot": "bottom-center"
+  },
+  "global": {
+    "characters": [
+      "base_body_male",
+      "base_body_female",
+      "skin_tones",
+      "hair_short",
+      "hair_long",
+      "hair_braids",
+      "hair_tied",
+      "facial_hair",
+      "novice_clothes"
+    ],
+    "classes": [
+      "assassin",
+      "tank",
+      "mage",
+      "archer",
+      "swordsman"
+    ],
+    "actions": [
+      "idle",
+      "walk",
+      "run",
+      "dash",
+      "attack_1",
+      "attack_2",
+      "attack_3",
+      "skill",
+      "hit",
+      "death"
+    ],
+    "equipmentRule": "one visible armour and weapon set per class per region"
+  },
+  "regions": [
+    {
+      "id": "solara_coast",
+      "maps": [
+        "start_city",
+        "training_camp",
+        "harbour",
+        "field_1",
+        "field_2",
+        "field_3",
+        "elite_ruins",
+        "world_boss",
+        "capital",
+        "raid"
+      ],
+      "terrain": [
+        "ground",
+        "paths",
+        "water_or_hazard",
+        "cliffs",
+        "walls",
+        "transitions"
+      ],
+      "buildings": [
+        "inn",
+        "shop",
+        "smithy",
+        "alchemy",
+        "guild",
+        "quest_hall",
+        "pet_sanctuary",
+        "raid_gate"
+      ],
+      "mobs": [
+        "meadow_slime",
+        "reef_crab",
+        "coast_wolf",
+        "tide_cultist",
+        "shell_brute"
+      ],
+      "animals": [
+        "gull",
+        "fox",
+        "sea_turtle"
+      ],
+      "boss": "leviathan_guardian",
+      "animated": [
+        "water",
+        "fire",
+        "lights",
+        "doors",
+        "flags",
+        "portal",
+        "weather",
+        "boss_fx"
+      ]
+    },
+    {
+      "id": "elderwood",
+      "maps": [
+        "rootbound_town",
+        "ranger_lodge",
+        "mushroom_hollow",
+        "forest_1",
+        "forest_2",
+        "forest_3",
+        "overgrown_ruins",
+        "world_boss",
+        "canopy_capital",
+        "raid"
+      ],
+      "terrain": [
+        "ground",
+        "paths",
+        "water_or_hazard",
+        "cliffs",
+        "walls",
+        "transitions"
+      ],
+      "buildings": [
+        "inn",
+        "shop",
+        "smithy",
+        "alchemy",
+        "guild",
+        "quest_hall",
+        "pet_sanctuary",
+        "raid_gate"
+      ],
+      "mobs": [
+        "moss_slime",
+        "thorn_boar",
+        "sporeling",
+        "bark_guard",
+        "mist_witch"
+      ],
+      "animals": [
+        "owl",
+        "deer",
+        "red_panda"
+      ],
+      "boss": "heartwood_colossus",
+      "animated": [
+        "water",
+        "fire",
+        "lights",
+        "doors",
+        "flags",
+        "portal",
+        "weather",
+        "boss_fx"
+      ]
+    },
+    {
+      "id": "sundervale",
+      "maps": [
+        "caravan_city",
+        "oasis_camp",
+        "sun_gate",
+        "dunes_1",
+        "dunes_2",
+        "dunes_3",
+        "buried_temple",
+        "world_boss",
+        "mirage_capital",
+        "raid"
+      ],
+      "terrain": [
+        "ground",
+        "paths",
+        "water_or_hazard",
+        "cliffs",
+        "walls",
+        "transitions"
+      ],
+      "buildings": [
+        "inn",
+        "shop",
+        "smithy",
+        "alchemy",
+        "guild",
+        "quest_hall",
+        "pet_sanctuary",
+        "raid_gate"
+      ],
+      "mobs": [
+        "sand_scarab",
+        "dune_jackal",
+        "mummy_guard",
+        "sun_mage",
+        "stone_sentinel"
+      ],
+      "animals": [
+        "fennec",
+        "vulture",
+        "desert_lizard"
+      ],
+      "boss": "sandwyrm",
+      "animated": [
+        "water",
+        "fire",
+        "lights",
+        "doors",
+        "flags",
+        "portal",
+        "weather",
+        "boss_fx"
+      ]
+    },
+    {
+      "id": "frostspire",
+      "maps": [
+        "snowkeep",
+        "mountain_camp",
+        "frozen_harbour",
+        "tundra_1",
+        "tundra_2",
+        "tundra_3",
+        "crystal_mine",
+        "world_boss",
+        "ice_capital",
+        "raid"
+      ],
+      "terrain": [
+        "ground",
+        "paths",
+        "water_or_hazard",
+        "cliffs",
+        "walls",
+        "transitions"
+      ],
+      "buildings": [
+        "inn",
+        "shop",
+        "smithy",
+        "alchemy",
+        "guild",
+        "quest_hall",
+        "pet_sanctuary",
+        "raid_gate"
+      ],
+      "mobs": [
+        "frost_slime",
+        "ice_wolf",
+        "snow_raider",
+        "crystal_mage",
+        "yeti_guard"
+      ],
+      "animals": [
+        "arctic_fox",
+        "snow_owl",
+        "seal"
+      ],
+      "boss": "frost_titan",
+      "animated": [
+        "water",
+        "fire",
+        "lights",
+        "doors",
+        "flags",
+        "portal",
+        "weather",
+        "boss_fx"
+      ]
+    },
+    {
+      "id": "emberfall",
+      "maps": [
+        "ashen_refuge",
+        "war_camp",
+        "lava_port",
+        "ashfield_1",
+        "ashfield_2",
+        "ashfield_3",
+        "burning_foundry",
+        "world_boss",
+        "blackflame_capital",
+        "raid"
+      ],
+      "terrain": [
+        "ground",
+        "paths",
+        "water_or_hazard",
+        "cliffs",
+        "walls",
+        "transitions"
+      ],
+      "buildings": [
+        "inn",
+        "shop",
+        "smithy",
+        "alchemy",
+        "guild",
+        "quest_hall",
+        "pet_sanctuary",
+        "raid_gate"
+      ],
+      "mobs": [
+        "ember_slime",
+        "lava_hound",
+        "ash_cultist",
+        "magma_golem",
+        "citadel_knight"
+      ],
+      "animals": [
+        "fire_lizard",
+        "ash_raven",
+        "magma_tortoise"
+      ],
+      "boss": "infernal_dragon",
+      "animated": [
+        "water",
+        "fire",
+        "lights",
+        "doors",
+        "flags",
+        "portal",
+        "weather",
+        "boss_fx"
+      ]
+    }
+  ],
+  "status": "production_started"
+}
