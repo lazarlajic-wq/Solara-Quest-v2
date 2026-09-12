@@ -18,6 +18,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     height: 720,
     min: { width: 640, height: 360 }
   },
+  input: { activePointers: 4 },
   physics: {
     default: "arcade",
     arcade: { gravity: { x: 0, y: 0 }, debug: false }

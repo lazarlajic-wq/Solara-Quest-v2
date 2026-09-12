@@ -24,6 +24,8 @@ export interface PlayerKeys {
   interact: Phaser.Input.Keyboard.Key;
 }
 
+export type MovementState = Record<Direction, boolean>;
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
   readonly definition: ClassDefinition;
   direction: Direction = "down";
@@ -45,16 +47,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.body?.setSize(48, 58).setOffset(94, 128);
   }
 
-  updateMovement(time: number, keys: PlayerKeys): void {
+  updateMovement(time: number, keys: PlayerKeys, touch?: MovementState): void {
     if (this.action === "dead") return;
     if (time < this.lockedUntil) return;
 
     let x = 0;
     let y = 0;
-    if (keys.left.isDown || keys.leftAlt.isDown) x -= 1;
-    if (keys.right.isDown || keys.rightAlt.isDown) x += 1;
-    if (keys.up.isDown || keys.upAlt.isDown) y -= 1;
-    if (keys.down.isDown || keys.downAlt.isDown) y += 1;
+    if (keys.left.isDown || keys.leftAlt.isDown || touch?.left) x -= 1;
+    if (keys.right.isDown || keys.rightAlt.isDown || touch?.right) x += 1;
+    if (keys.up.isDown || keys.upAlt.isDown || touch?.up) y -= 1;
+    if (keys.down.isDown || keys.downAlt.isDown || touch?.down) y += 1;
 
     if (x !== 0 || y !== 0) {
       const vector = new Phaser.Math.Vector2(x, y).normalize().scale(this.definition.speed);

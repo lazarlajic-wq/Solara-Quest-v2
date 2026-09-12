@@ -1,8 +1,8 @@
 import Phaser from "phaser";
 import { CLASS_DEFINITIONS, type ClassId } from "../content/classes";
 import { WORLD_DEFINITIONS, type BuildingDefinition, type MapDefinition, type PortalDefinition } from "../content/world";
-import { Player, type PlayerKeys } from "../entities/Player";
-import { GAME_EVENTS, type HudState } from "../events";
+import { Player, type MovementState, type PlayerKeys } from "../entities/Player";
+import { GAME_EVENTS, type HudState, type TouchAction, type TouchMoveEvent } from "../events";
 
 interface WorldStartData { mapId?: string; spawnId?: string }
 interface Enemy extends Phaser.Physics.Arcade.Image { health: number; tier: number; nextHitAt: number }
@@ -31,6 +31,8 @@ export class WorldScene extends Phaser.Scene {
   private spawnId = "start";
   private lastHudAt = 0;
   private respawnScheduled = false;
+  private touchMovement: MovementState = { up: false, down: false, left: false, right: false };
+  private pendingTouchActions = new Set<TouchAction>();
 
   constructor() { super("World"); }
 
@@ -69,21 +71,33 @@ export class WorldScene extends Phaser.Scene {
     this.cameras.main.setZoom(1.12);
     this.scene.launch("HUD");
     this.game.events.emit(GAME_EVENTS.message, this.map.label);
+    this.game.events.on(GAME_EVENTS.touchMove, this.onTouchMove, this);
+    this.game.events.on(GAME_EVENTS.touchAction, this.onTouchAction, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.game.events.emit(GAME_EVENTS.portalPrompt, "");
+      this.game.events.off(GAME_EVENTS.touchMove, this.onTouchMove, this);
+      this.game.events.off(GAME_EVENTS.touchAction, this.onTouchAction, this);
+      this.touchMovement = { up: false, down: false, left: false, right: false };
+      this.pendingTouchActions.clear();
       this.scene.stop("HUD");
     });
   }
 
   update(time: number): void {
-    this.player.updateMovement(time, this.keys);
+    this.player.updateMovement(time, this.keys, this.touchMovement);
     this.updateEnemyAi(time);
     this.updatePortalPrompt();
 
-    if (Phaser.Input.Keyboard.JustDown(this.keys.dash)) this.player.tryDash(time);
-    if (Phaser.Input.Keyboard.JustDown(this.keys.attack)) this.tryPrimaryAttack(time);
-    if (Phaser.Input.Keyboard.JustDown(this.keys.skill)) this.trySkill(time);
-    if (Phaser.Input.Keyboard.JustDown(this.keys.interact) && this.currentPortal) this.enterPortal(this.currentPortal.definition);
+    const touchDash = this.consumeTouchAction("dash");
+    const touchAttack = this.consumeTouchAction("attack");
+    const touchSkill = this.consumeTouchAction("skill");
+    const touchInteract = this.consumeTouchAction("interact");
+    if (Phaser.Input.Keyboard.JustDown(this.keys.dash) || touchDash) this.player.tryDash(time);
+    if (Phaser.Input.Keyboard.JustDown(this.keys.attack) || touchAttack) this.tryPrimaryAttack(time);
+    if (Phaser.Input.Keyboard.JustDown(this.keys.skill) || touchSkill) this.trySkill(time);
+    if ((Phaser.Input.Keyboard.JustDown(this.keys.interact) || touchInteract) && this.currentPortal) {
+      this.enterPortal(this.currentPortal.definition);
+    }
 
     if (this.player.action === "dead" && !this.respawnScheduled) {
       this.respawnScheduled = true;
@@ -104,6 +118,20 @@ export class WorldScene extends Phaser.Scene {
       };
       this.game.events.emit(GAME_EVENTS.hudUpdate, state);
     }
+  }
+
+  private onTouchMove(event: TouchMoveEvent): void {
+    this.touchMovement[event.direction] = event.pressed;
+  }
+
+  private onTouchAction(action: TouchAction): void {
+    this.pendingTouchActions.add(action);
+  }
+
+  private consumeTouchAction(action: TouchAction): boolean {
+    const pending = this.pendingTouchActions.has(action);
+    this.pendingTouchActions.delete(action);
+    return pending;
   }
 
   private createKeys(): PlayerKeys {
