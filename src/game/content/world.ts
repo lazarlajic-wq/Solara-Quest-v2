@@ -45,7 +45,7 @@ const interior = (id: string, label: string, returnMapId: string, returnPortalId
 
 const spawnTown = outside("spawn_town", "Solara-Küstenstadt", 180, 130, "coast");
 spawnTown.spawns.push(
-  { id: "start", x: 90, y: 70 },
+  { id: "start", x: 90, y: 75 },
   { id: "inn_door", x: 48, y: 52 }, { id: "shop_door", x: 72, y: 46 },
   { id: "smithy_door", x: 102, y: 47 }, { id: "guild_door", x: 128, y: 55 },
   { id: "alchemy_door", x: 61, y: 87 }, { id: "quest_door", x: 116, y: 86 }

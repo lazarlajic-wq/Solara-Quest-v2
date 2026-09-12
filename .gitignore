@@ -3,3 +3,5 @@
 /vendor/universal-lpc/
 /node_modules/
 /dist/
+__pycache__/
+*.pyc

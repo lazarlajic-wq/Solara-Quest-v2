@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { CLASS_DEFINITIONS } from "../content/classes";
+import { REGION_ONE_IMAGES, REGION_ONE_SHEETS } from "../content/regionOneAssets";
 import assassinSheet from "../../../assets/design/region_01/assassin_motion_master_v1.png";
 import tankSheet from "../../../assets/design/region_01/tank_motion_master_v1.png";
 import mageSheet from "../../../assets/design/region_01/mage_motion_master_v1.png";
@@ -46,6 +47,14 @@ export class PreloadScene extends Phaser.Scene {
         endFrame: 27
       });
     }
+    for (const [key, url] of Object.entries(REGION_ONE_IMAGES)) this.load.image(key, url);
+    for (const [key, sheet] of Object.entries(REGION_ONE_SHEETS)) {
+      this.load.spritesheet(key, sheet.url, {
+        frameWidth: sheet.frameWidth,
+        frameHeight: sheet.frameHeight,
+        endFrame: sheet.endFrame
+      });
+    }
   }
 
   create(): void {
@@ -53,6 +62,9 @@ export class PreloadScene extends Phaser.Scene {
       if (!this.textures.exists(definition.texture) || this.textures.get(definition.texture).frameTotal < 28) {
         this.failedAssets.add(definition.texture);
       }
+    }
+    for (const key of [...Object.keys(REGION_ONE_IMAGES), ...Object.keys(REGION_ONE_SHEETS)]) {
+      if (!this.textures.exists(key)) this.failedAssets.add(key);
     }
 
     if (this.failedAssets.size > 0) {

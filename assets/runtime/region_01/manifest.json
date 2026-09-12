@@ -1,0 +1,38 @@
+{
+  "id": "solara-coast-runtime-v1",
+  "sourceAtlases": [
+    "assets/source/higgsfield/regions/01_solara_coast/terrain_tileset.png",
+    "assets/source/higgsfield/regions/01_solara_coast/building_exteriors.png",
+    "assets/source/higgsfield/global/animated_environment.png"
+  ],
+  "generator": "scripts/build_region_one_runtime_assets.py",
+  "tileSize": [32, 32],
+  "assets": {
+    "r1-grass": { "file": "terrain_grass.png", "type": "tile", "size": [32, 32], "alpha": false },
+    "r1-grass-alt": { "file": "terrain_grass_alt.png", "type": "tile", "size": [32, 32], "alpha": false },
+    "r1-dirt": { "file": "terrain_dirt.png", "type": "tile", "size": [32, 32], "alpha": false },
+    "r1-stone": { "file": "terrain_stone.png", "type": "tile", "size": [32, 32], "alpha": false },
+    "r1-sand": { "file": "terrain_sand.png", "type": "tile", "size": [32, 32], "alpha": false },
+    "r1-water-a": { "file": "terrain_water_a.png", "type": "tile", "size": [32, 32], "alpha": false },
+    "r1-water-b": { "file": "terrain_water_b.png", "type": "tile", "size": [32, 32], "alpha": false },
+    "r1-building-guild": { "file": "building_guild.png", "type": "building", "size": [282, 205], "alpha": true },
+    "r1-building-inn": { "file": "building_inn.png", "type": "building", "size": [258, 203], "alpha": true },
+    "r1-building-smithy": { "file": "building_smithy.png", "type": "building", "size": [276, 210], "alpha": true },
+    "r1-building-shop": { "file": "building_shop.png", "type": "building", "size": [278, 197], "alpha": true },
+    "r1-building-quest": { "file": "building_quest.png", "type": "building", "size": [284, 183], "alpha": true },
+    "r1-building-alchemy": { "file": "building_alchemy.png", "type": "building", "size": [247, 177], "alpha": true },
+    "r1-decor-bush": { "file": "decor_bush.png", "type": "decoration", "size": [77, 86], "alpha": true },
+    "r1-decor-flower-bush": { "file": "decor_flower_bush.png", "type": "decoration", "size": [92, 86], "alpha": true },
+    "r1-decor-rock": { "file": "decor_rock.png", "type": "decoration", "size": [78, 83], "alpha": true },
+    "r1-decor-grass": { "file": "decor_grass.png", "type": "decoration", "size": [86, 86], "alpha": true },
+    "r1-fountain": {
+      "file": "fountain_animation.png",
+      "type": "spritesheet",
+      "size": [576, 96],
+      "alpha": true,
+      "frameSize": [96, 96],
+      "frames": 6,
+      "frameRate": 7
+    }
+  }
+}

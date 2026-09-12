@@ -11,6 +11,7 @@ command -v python3 >/dev/null
 python3 -m json.tool "$repo_root/assets/manifest.json" >/dev/null
 python3 -m json.tool "$manifest" >/dev/null
 python3 -m json.tool "$lpc_lock" >/dev/null
+python3 -m json.tool "$repo_root/assets/runtime/region_01/manifest.json" >/dev/null
 
 python3 - "$manifest" <<'PY'
 import json
@@ -61,6 +62,19 @@ do
   }
 done
 
+runtime_root="$repo_root/assets/runtime/region_01"
+for tile in terrain_grass terrain_grass_alt terrain_dirt terrain_stone terrain_sand terrain_water_a terrain_water_b; do
+  test "$(identify -format '%wx%h' "$runtime_root/$tile.png")" = "32x32"
+done
+for file in "$runtime_root"/building_*.png; do
+  case "$(identify -format '%[channels]' "$file")" in
+    *a*) ;;
+    *) echo "FAIL: $file has no alpha channel" >&2; exit 1 ;;
+  esac
+  test "$(identify -format '%[opaque]' "$file")" = "false"
+done
+test "$(identify -format '%wx%h' "$runtime_root/fountain_animation.png")" = "576x96"
+
 lpc_root="$repo_root/vendor/universal-lpc"
 if test -d "$lpc_root"; then
   test -f "$lpc_root/CREDITS.csv"
@@ -73,4 +87,5 @@ else
 fi
 
 echo "Character concept assets: PASS"
+echo "Region 1 runtime world assets: PASS"
 echo "Runtime 64x64 sheets: PENDING"

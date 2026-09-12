@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { CLASS_DEFINITIONS, type ClassId } from "../content/classes";
+import { REGION_ONE_BUILDINGS } from "../content/regionOneAssets";
 import { WORLD_DEFINITIONS, type BuildingDefinition, type MapDefinition, type PortalDefinition } from "../content/world";
 import { Player, type MovementState, type PlayerKeys } from "../entities/Player";
 import { GAME_EVENTS, type HudState, type TouchAction, type TouchMoveEvent } from "../events";
@@ -33,6 +34,7 @@ export class WorldScene extends Phaser.Scene {
   private respawnScheduled = false;
   private touchMovement: MovementState = { up: false, down: false, left: false, right: false };
   private pendingTouchActions = new Set<TouchAction>();
+  private waterLayers: Phaser.GameObjects.TileSprite[] = [];
 
   constructor() { super("World"); }
 
@@ -83,8 +85,13 @@ export class WorldScene extends Phaser.Scene {
     });
   }
 
-  update(time: number): void {
+  update(time: number, delta: number): void {
+    this.waterLayers.forEach((water, index) => {
+      water.tilePositionX += delta * (index === 0 ? 0.012 : -0.006);
+      water.tilePositionY += delta * 0.002;
+    });
     this.player.updateMovement(time, this.keys, this.touchMovement);
+    this.player.setDepth(Math.round(this.player.y) + 10);
     this.updateEnemyAi(time);
     this.updatePortalPrompt();
 
@@ -158,6 +165,11 @@ export class WorldScene extends Phaser.Scene {
     const width = this.map.widthTiles * TILE;
     const height = this.map.heightTiles * TILE;
     const colours = THEME_COLOURS[this.map.theme];
+    if (this.map.id === "spawn_town") {
+      this.drawSpawnTown(width, height);
+      this.map.portals.forEach((portal) => this.createPortal(portal));
+      return;
+    }
     this.add.rectangle(width / 2, height / 2, width, height, colours.ground).setDepth(-20);
 
     const grid = this.add.graphics().setDepth(-19);
@@ -181,6 +193,116 @@ export class WorldScene extends Phaser.Scene {
       this.add.text(width / 2, TILE * 3, this.map.label, { fontSize: "28px", color: "#f3c85b", fontStyle: "bold" }).setOrigin(0.5);
       for (let i = 0; i < 7; i += 1) this.createObstacle(5 + i * 4, 8 + (i % 2) * 5, 3, 2, 0x8d623d);
     }
+  }
+
+  private drawSpawnTown(width: number, height: number): void {
+    this.add.tileSprite(0, 0, width, height, "r1-grass").setOrigin(0).setDepth(-30);
+
+    const mainRoad = this.add.tileSprite(0, 61 * TILE, width, 9 * TILE, "r1-dirt").setOrigin(0).setDepth(-25);
+    mainRoad.tilePositionX = 11;
+    const harbourRoad = this.add.tileSprite(86 * TILE, 0, 9 * TILE, height, "r1-dirt").setOrigin(0).setDepth(-25);
+    harbourRoad.tilePositionY = 7;
+    this.add.tileSprite(76 * TILE, 54 * TILE, 28 * TILE, 26 * TILE, "r1-stone").setOrigin(0).setDepth(-24);
+
+    const shoreY = 111 * TILE;
+    this.add.tileSprite(0, 106 * TILE, width, 6 * TILE, "r1-sand").setOrigin(0).setDepth(-23);
+    const waterA = this.add.tileSprite(0, shoreY, width, height - shoreY, "r1-water-a").setOrigin(0).setDepth(-22);
+    const waterB = this.add.tileSprite(0, shoreY, width, height - shoreY, "r1-water-b")
+      .setOrigin(0).setDepth(-21).setAlpha(0.28);
+    this.waterLayers.push(waterA, waterB);
+    this.tweens.add({ targets: waterB, alpha: { from: 0.18, to: 0.48 }, duration: 1500, yoyo: true, repeat: -1 });
+
+    const dock = this.add.tileSprite(86 * TILE, 106 * TILE, 9 * TILE, 24 * TILE, "r1-stone").setOrigin(0).setDepth(-18);
+    dock.setTint(0xc9a56c);
+    this.createInvisibleCollisionRect(42.5 * TILE, 119.5 * TILE, 85 * TILE, 21 * TILE);
+    this.createInvisibleCollisionRect(138 * TILE, 119.5 * TILE, 84 * TILE, 21 * TILE);
+
+    this.createTownBoundary(width, height);
+    this.map.buildings.forEach((building) => this.createArtBuilding(building));
+    this.createTownDecorations(width, shoreY);
+    this.createFountain(90 * TILE, 66 * TILE);
+
+    this.add.text(90 * TILE, 58 * TILE, "SOLARA", {
+      fontSize: "34px", color: "#fff4c7", fontStyle: "bold", stroke: "#173f4f", strokeThickness: 7
+    }).setOrigin(0.5).setDepth(5);
+  }
+
+  private createTownBoundary(width: number, height: number): void {
+    const eastOpeningTop = 60 * TILE;
+    const eastOpeningBottom = 70 * TILE;
+    const harbourLeft = 84 * TILE;
+    const harbourRight = 97 * TILE;
+    this.createInvisibleCollisionRect(width / 2, TILE / 2, width, TILE);
+    this.createInvisibleCollisionRect(TILE / 2, height / 2, TILE, height);
+    this.createInvisibleCollisionRect(width - TILE / 2, eastOpeningTop / 2, TILE, eastOpeningTop);
+    this.createInvisibleCollisionRect(width - TILE / 2, (eastOpeningBottom + height) / 2, TILE, height - eastOpeningBottom);
+    this.createInvisibleCollisionRect(harbourLeft / 2, height - TILE / 2, harbourLeft, TILE);
+    this.createInvisibleCollisionRect((harbourRight + width) / 2, height - TILE / 2, width - harbourRight, TILE);
+
+    for (let x = 3 * TILE; x < width - 3 * TILE; x += 6 * TILE) {
+      if (x > harbourLeft - TILE && x < harbourRight + TILE) continue;
+      this.add.image(x, 2 * TILE, "r1-decor-bush").setDisplaySize(68, 58).setDepth(2);
+    }
+  }
+
+  private createArtBuilding(building: BuildingDefinition): void {
+    const texture = REGION_ONE_BUILDINGS[building.id];
+    if (!texture) return;
+    const centreX = (building.x + building.width / 2) * TILE;
+    const bottomY = (building.y + building.height) * TILE;
+    const image = this.add.image(centreX, bottomY, texture).setOrigin(0.5, 1).setDepth(bottomY);
+    image.setDisplaySize(building.width * TILE, building.height * TILE);
+
+    const collisionHeight = Math.max(2, building.height - 2) * TILE;
+    this.createInvisibleCollisionRect(centreX, building.y * TILE + collisionHeight / 2, building.width * TILE, collisionHeight);
+    this.add.text(centreX, building.y * TILE - 10, building.label, {
+      fontSize: "15px", color: "#fff4c7", backgroundColor: "#102a38dd", padding: { x: 8, y: 4 }
+    }).setOrigin(0.5, 1).setDepth(bottomY + 1);
+  }
+
+  private createTownDecorations(width: number, shoreY: number): void {
+    const random = new Phaser.Math.RandomDataGenerator(["solara-spawn-town-art-v1"]);
+    const textures = ["r1-decor-grass", "r1-decor-grass", "r1-decor-flower-bush", "r1-decor-rock"];
+    for (let index = 0; index < 180; index += 1) {
+      const x = random.integerInRange(3 * TILE, width - 4 * TILE);
+      const y = random.integerInRange(4 * TILE, shoreY - 7 * TILE);
+      if ((x > 68 * TILE && x < 113 * TILE && y > 49 * TILE && y < 89 * TILE) ||
+          (y > 57 * TILE && y < 73 * TILE) || (x > 82 * TILE && x < 99 * TILE)) continue;
+      const texture = random.pick(textures);
+      const decoration = this.add.image(x, y, texture).setDisplaySize(32, 32).setDepth(y - 2);
+      if (texture.includes("grass") || texture.includes("flower")) {
+        this.tweens.add({
+          targets: decoration,
+          angle: { from: -1.8, to: 1.8 },
+          scaleY: { from: decoration.scaleY * 0.97, to: decoration.scaleY * 1.03 },
+          duration: random.integerInRange(1100, 1900),
+          delay: random.integerInRange(0, 900),
+          yoyo: true,
+          repeat: -1,
+          ease: "Sine.InOut"
+        });
+      }
+    }
+  }
+
+  private createFountain(x: number, y: number): void {
+    if (!this.anims.exists("r1-fountain-flow")) {
+      this.anims.create({
+        key: "r1-fountain-flow",
+        frames: this.anims.generateFrameNumbers("r1-fountain", { start: 0, end: 5 }),
+        frameRate: 7,
+        repeat: -1
+      });
+    }
+    const fountain = this.add.sprite(x, y, "r1-fountain", 0).setDisplaySize(160, 160).setDepth(y).play("r1-fountain-flow");
+    this.createInvisibleCollisionRect(x, y + 28, 96, 58);
+  }
+
+  private createInvisibleCollisionRect(x: number, y: number, width: number, height: number): void {
+    if (width <= 0 || height <= 0) return;
+    const zone = this.add.zone(x, y, width, height);
+    this.physics.add.existing(zone, true);
+    this.obstacles.add(zone);
   }
 
   private createBoundary(width: number, height: number): void {
@@ -219,7 +341,17 @@ export class WorldScene extends Phaser.Scene {
     zone.definition = definition;
     this.physics.add.existing(zone, true);
     this.portalZones.push(zone);
-    this.add.rectangle(zone.x, zone.y, width, height, 0x44ddff, 0.14).setStrokeStyle(2, 0x7ee7ff, 0.8).setDepth(2);
+    if (this.map.id === "spawn_town") {
+      if (definition.id === "to_training") {
+        this.add.text(zone.x - TILE, zone.y, "TRAINING →", { fontSize: "15px", color: "#d9f4ff", backgroundColor: "#102a38cc", padding: { x: 8, y: 4 } })
+          .setOrigin(1, 0.5).setDepth(8);
+      } else if (definition.id === "to_harbour") {
+        this.add.text(zone.x, zone.y - TILE, "HAFEN ↓", { fontSize: "15px", color: "#d9f4ff", backgroundColor: "#102a38cc", padding: { x: 8, y: 4 } })
+          .setOrigin(0.5, 1).setDepth(8);
+      }
+    } else {
+      this.add.rectangle(zone.x, zone.y, width, height, 0x44ddff, 0.14).setStrokeStyle(2, 0x7ee7ff, 0.8).setDepth(2);
+    }
   }
 
   private spawnEnemies(tileX: number, tileY: number, count: number, tier: number, random: Phaser.Math.RandomDataGenerator): void {
@@ -242,6 +374,7 @@ export class WorldScene extends Phaser.Scene {
     this.enemies.children.each((child) => {
       const enemy = child as Enemy;
       if (!enemy.active) return true;
+      enemy.setDepth(Math.round(enemy.y));
       const distance = Phaser.Math.Distance.Between(enemy.x, enemy.y, this.player.x, this.player.y);
       if (distance < 430 && distance > 48 && this.player.action !== "dead") {
         this.physics.moveToObject(enemy, this.player, 55 + enemy.tier * 8);
